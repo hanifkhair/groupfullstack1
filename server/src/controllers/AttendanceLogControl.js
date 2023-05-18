@@ -17,10 +17,11 @@ const AttendanceLogController = {
 
   insertAttendanceLog: async (req, res) => {
     try {
-      const { checkIn, checkOut } = req.body;
+      const { checkIn, checkOut, user_id } = req.body;
       await db.AttendanceLog.create({
         checkIn,
         checkOut,
+        user_id,
       });
       return await db.AttendanceLog.findAll().then((result) => {
         res.send({
@@ -37,11 +38,12 @@ const AttendanceLogController = {
   },
   editAttendanceLog: async (req, res) => {
     try {
-      const { checkIn, checkOut } = req.body;
+      const { checkIn, checkOut, user_id } = req.body;
       await db.AttendanceLog.update(
         {
           checkIn,
           checkOut,
+          user_id,
         },
         {
           where: {
