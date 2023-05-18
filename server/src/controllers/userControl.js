@@ -30,12 +30,13 @@ const userController = {
   },
   insertUser: async (req, res) => {
     try {
-      const { name, address, email, password } = req.body;
+      const { name, address, email, password, company_id } = req.body;
       await db.User.create({
         name,
         address,
         email,
         password,
+        company_id,
       });
       return await db.User.findAll().then((result) => {
         res.send({
@@ -52,13 +53,14 @@ const userController = {
   },
   editUser: async (req, res) => {
     try {
-      const { name, address, email, password } = req.body;
+      const { name, address, email, password, company_id } = req.body;
       await db.User.update(
         {
           name,
           address,
           email,
           password,
+          company_id,
         },
         {
           where: {

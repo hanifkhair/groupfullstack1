@@ -10,9 +10,11 @@ const routes = require("./routes");
 // const Branch = db.Branch;
 // const Lecturer = db.Lecturer;
 // Lecturer.sync();
-// db.Branch.sync({ alter: true });
 
-db.sequelize.sync({ alter: true });
+// db.AttendanceLog.sync({ force: true });  -> digunakan untuk menghapus table jika ingin menambahkan tabel baru di controller
+// db.AttendanceLog.sync({ alter: true }); -> digunakan untuk membuat fromat baru dari tabel
+
+// db.sequelize.sync({ alter: true });
 
 app.use(cors());
 app.use(express.json());
@@ -21,7 +23,7 @@ app.get("/", (req, res) => res.send("sequelize"));
 
 app.use("/users", routes.userRoutes);
 app.use("/attendanceLogs", routes.attendanceLogRoutes);
-app.use("/company", routes.companyRoutes);
+app.use("/companies", routes.companyRoutes);
 
 app.listen(PORT, () => {
   console.log(`server is running on PORT: ${PORT}`);
