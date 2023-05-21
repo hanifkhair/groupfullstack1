@@ -6,6 +6,7 @@ const attendanceLogController =
 
 //get
 router.get("/", attendanceLogController.getAll);
+router.get("/check/:id", attendanceLogController.getTheId);
 router.get("/:id", attendanceLogController.getById);
 
 //insert

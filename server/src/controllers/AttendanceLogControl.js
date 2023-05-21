@@ -14,6 +14,26 @@ const AttendanceLogController = {
     });
     return res.send(AttendanceLog);
   },
+  getTheId: async (req, res) => {
+    try {
+      console.log(req.params);
+      // const result = await db.sequelize.query(
+      //   `SELECT * FROM AttendanceLogs WHERE user_id = ${req.params.id} ORDER BY id DESC LIMIT 1`
+      // );
+      const result = await db.AttendanceLog.findOne({
+        attributes: ["id"],
+        where: {
+          user_id: req.params.id,
+        },
+        order: db.sequelize.literal("id DESC"),
+      });
+      console.log(result);
+      return res.send(result);
+    } catch (error) {
+      console.error("Error executing raw query:", error);
+      return res.send(error);
+    }
+  },
 
   insertAttendanceLog: async (req, res) => {
     try {
@@ -38,12 +58,10 @@ const AttendanceLogController = {
   },
   editAttendanceLog: async (req, res) => {
     try {
-      const { checkIn, checkOut, user_id } = req.body;
+      const { checkOut } = req.body;
       await db.AttendanceLog.update(
         {
-          checkIn,
           checkOut,
-          user_id,
         },
         {
           where: {

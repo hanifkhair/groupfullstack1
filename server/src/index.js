@@ -6,6 +6,7 @@ const cors = require("cors");
 const PORT = process.env.PORT;
 const db = require("./models/");
 const routes = require("./routes");
+// const { sequelize } = require("./models");
 
 // const Branch = db.Branch;
 // const Lecturer = db.Lecturer;
@@ -15,6 +16,8 @@ const routes = require("./routes");
 // db.AttendanceLog.sync({ alter: true }); -> digunakan untuk membuat fromat baru dari tabel
 
 // db.sequelize.sync({ alter: true });
+
+// sequelize.sync();
 
 app.use(cors());
 app.use(express.json());

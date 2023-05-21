@@ -1,42 +1,78 @@
 import { Box, Container, Flex, Center } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Moment from "react-moment";
+import moment from "moment";
 import axios from "axios";
 
 export default function DashboardPage() {
   // const [clickInHas, setClickInHas] = useState(false);
-  const [clockIn, setClockIn] = useState([]);
+  // const [clockIn, setClockIn] = useState([]);
   const [isClickIn, setIsClickIn] = useState(false);
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   const cin = () => {
     if (!isClickIn) {
       pushCin();
-      const timeClicked = new Date();
-      setClockIn([...clockIn, timeClicked]);
       setIsClickIn(true);
       // setClickInHas(false);
     }
   };
 
-  const [clockOut, setClockOut] = useState([]);
+  // const [clockOut, setClockOut] = useState([]);
   const [isClickOut, setIsClickOut] = useState(false);
 
   const cout = () => {
     // if (clickInHas) {
     if (!isClickOut) {
-      const timeClicked = new Date();
-      setClockOut([...clockOut, timeClicked]);
+      pushCout();
       setIsClickOut(true);
     }
     // }
   };
 
-  // async function pushCin() {
-  // const []
-  // await axios.get("http:/localhost:2000/").then((req, res)=>{
+  // GETDATA
+  const [Attendance, setAttendace] = useState([]);
 
-  //   })
-  // }
+  async function fetch() {
+    await axios.get("http://localhost:2000/attendanceLogs/").then((res) => {
+      setAttendace(res.data);
+    });
+  }
+
+  // CLOCK-IN
+  const attend = {
+    checkIn: moment().format("YYYY-MM-DD hh:mm:ss"),
+    checkOut: null,
+    user_id: "1",
+  };
+  async function pushCin() {
+    console.log(attend);
+    await axios.post("http://localhost:2000/attendanceLogs/", attend);
+    console.log(attend.user_id);
+    fetch();
+  }
+
+  // CLOCK-OUT
+  const attendOut = {
+    checkOut: moment().format("YYYY-MM-DD hh:mm:ss"),
+  };
+  async function pushCout() {
+    const idget = await axios.get(
+      "http://localhost:2000/attendanceLogs/check/" + 1
+    );
+
+    // console.log(attendOut);
+    console.log(idget.data);
+    await axios.patch(
+      "http://localhost:2000/attendanceLogs/" + idget.data.id,
+      attendOut
+    );
+
+    fetch();
+  }
 
   return (
     <>
@@ -120,23 +156,47 @@ export default function DashboardPage() {
             minHeight={"80px"}
             padding={"5px"}
           >
-            {clockIn.map((time, index) => (
+            {/* {clockIn.map((time, index) => (
               <Flex justifyContent={"space-around"} bgColor={"#9BA4B5"}>
                 <Box>
                   <Moment format="llll" date={time} />
                 </Box>
                 <Box>clock-in</Box>
               </Flex>
-            ))}
+            ))} */}
+            {Attendance.map((val) => {
+              return (
+                <>
+                  <Flex
+                    justifyContent={"space-evenly"}
+                    bgColor={"#9BA4B5"}
+                    border={"1px solid black"}
+                    fontWeight={"bold"}
+                  >
+                    <Box>{val.checkIn}</Box>
+                    <Box>Clockin</Box>
+                  </Flex>
+                  <Flex
+                    justifyContent={"space-evenly"}
+                    bgColor={"#9BA4B5"}
+                    border={"1px solid black"}
+                    fontWeight={"bold"}
+                  >
+                    <Box>{val.checkOut}</Box>
+                    <Box>ClockOut</Box>
+                  </Flex>
+                </>
+              );
+            })}
 
-            {clockOut.map((time, index) => (
+            {/* {clockOut.map((time, index) => (
               <Flex justifyContent={"space-around"} bgColor={"#9BA4B5"}>
                 <Box>
                   <Moment format="llll" date={time} />
                 </Box>
                 <Box>clock-Out</Box>
               </Flex>
-            ))}
+            ))} */}
             {/* <AttendanceLog /> */}
           </Box>
         </Flex>
